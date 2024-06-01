@@ -1,0 +1,3 @@
+[hooks]
+pre-commit = "cargo fmt && cargo test"
+commit-msg = "git cliff lint --commit-msg"
