@@ -1,8 +1,6 @@
 # Mock Gen
 
-[![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
-[![Downloads][downloads-img]][downloads-url]
 [![Issues][issues-img]][issues-url]
 [![Code Coverage][codecov-img]][codecov-url]
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
@@ -16,10 +14,6 @@ This project is made for simplicity when generating Mock Data, but may have some
 
 [build-img]: https://github.com/CodeVault-LLC/mockgen/actions/workflows/release.yml/badge.svg
 [build-url]: https://github.com/CodeVault-LLC/mockgen/actions/workflows/release.yml
-[downloads-img]: https://img.shields.io/npm/dt/mockgen
-[downloads-url]: https://www.npmtrends.com/mockgen
-[npm-img]: https://img.shields.io/npm/v/mockgen
-[npm-url]: https://www.npmjs.com/package/mockgen
 [issues-img]: https://img.shields.io/github/issues/CodeVault-LLC/mockgen
 [issues-url]: https://github.com/CodeVault-LLC/mockgen/issues
 [codecov-img]: https://codecov.io/gh/CodeVault-LLC/mockgen/branch/main/graph/badge.svg

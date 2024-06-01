@@ -49,11 +49,12 @@ jobs:
       - name: Package
         run: |
           mkdir -p dist
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
             cp target/release/mock_data.exe dist/
           else
             cp target/release/mock_data dist/
           fi
+        shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
