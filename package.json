@@ -52,7 +52,25 @@
           }
         }
       ],
-      "@semantic-release/github"
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "dist/mock_data-ubuntu.tar.gz",
+              "label": "Linux Binary"
+            },
+            {
+              "path": "dist/mock_data-macos.tar.gz",
+              "label": "MacOS Binary"
+            },
+            {
+              "path": "dist/mock_data-windows.tar.gz",
+              "label": "Windows Binary"
+            }
+          ]
+        }
+      ]
     ]
   },
   "keywords": [
