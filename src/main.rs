@@ -1,7 +1,5 @@
-mod mock_data;
-
 use actix_web::{web, App, HttpServer};
-use ::mock_data::generate_data;
+use mock_data::generate_data; // Add 'crate::' to import from the current crate
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
