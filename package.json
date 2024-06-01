@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "cm": "cz",
-    "prepare": "husky install",
+    "prepare": "husky",
     "semantic-release": "semantic-release"
   },
   "release": {
