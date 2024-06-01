@@ -1,5 +1,5 @@
 use rand::Rng;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -23,7 +23,10 @@ impl MockDataGenerator {
         MockDataGenerator
     }
 
-    pub fn generate_data(&self, request: &GenerateDataRequest) -> Result<Vec<HashMap<String, String>>, String> {
+    pub fn generate_data(
+        &self,
+        request: &GenerateDataRequest,
+    ) -> Result<Vec<HashMap<String, String>>, String> {
         let mut results = Vec::new();
 
         for _ in 0..request.rows {
@@ -47,25 +50,26 @@ impl MockDataGenerator {
         match field_type.type_.as_str() {
             "String" => {
                 let length = field_type.length.unwrap_or(10) as usize;
-                Ok((0..length).map(|_| rng.sample(rand::distributions::Alphanumeric) as char).collect())
-            },
+                Ok((0..length)
+                    .map(|_| rng.sample(rand::distributions::Alphanumeric) as char)
+                    .collect())
+            }
             "Integer" => {
                 let value: i32 = rng.gen();
                 Ok(value.to_string())
-            },
+            }
             "Float" => {
                 let value: f64 = rng.gen();
                 Ok(value.to_string())
-            },
+            }
             "Boolean" => {
                 let value: bool = rng.gen();
                 Ok(value.to_string())
-            },
+            }
             _ => Err(format!("Unsupported field type: {}", field_type.type_)),
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {

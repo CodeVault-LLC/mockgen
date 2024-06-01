@@ -1,11 +1,13 @@
+use actix_web::http::header;
 use actix_web::{test, App};
 use mock_data::generate_data;
 use std::collections::HashMap;
-use actix_web::http::header;
 
 #[actix_web::test]
 async fn test_generate_data_api() {
-    let app = test::init_service(App::new().route("/generate", actix_web::web::post().to(generate_data))).await;
+    let app =
+        test::init_service(App::new().route("/generate", actix_web::web::post().to(generate_data)))
+            .await;
 
     let payload = r#"
         {

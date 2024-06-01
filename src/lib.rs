@@ -1,6 +1,6 @@
 mod mock_data;
 
-use actix_web::{web, Responder, HttpResponse};
+use actix_web::{web, HttpResponse, Responder};
 use lazy_static::lazy_static;
 use mock_data::{GenerateDataRequest, MockDataGenerator}; // Ensure correct import
 
