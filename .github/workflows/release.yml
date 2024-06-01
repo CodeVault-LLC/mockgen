@@ -86,11 +86,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Download Artifacts
+      - name: Download Linux Artifact
         uses: actions/download-artifact@v3
         with:
-          name: mock_data-${{ matrix.os }}
-          path: dist/
+          name: mock_data-ubuntu-latest
+          path: dist/ubuntu
+
+      - name: Download MacOS Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: mock_data-macos-latest
+          path: dist/macos
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: mock_data-windows-latest
+          path: dist/windows
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
@@ -98,6 +110,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.semantic_release.outputs.upload_url }}
-          asset_path: dist/
-          asset_name: mock_data-${{ matrix.os }}.tar.gz
+          asset_path: |
+            dist/ubuntu/mock_data
+            dist/macos/mock_data
+            dist/windows/mock_data.exe
+          asset_name: mock_data-${{ runner.os }}.tar.gz
           asset_content_type: application/gzip
