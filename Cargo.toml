@@ -15,7 +15,3 @@ serde_json = "1.0.117"
 
 [dev-dependencies]
 actix-rt = "2.5.0"  # Ensure you have actix-rt for async testing
-
-[build-dependencies.cargo-husky]
-version = "1"
-features = ["user-hooks", "precommit-hook"]

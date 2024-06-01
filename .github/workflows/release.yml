@@ -49,17 +49,17 @@ jobs:
       - name: Package
         run: |
           mkdir -p dist
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            cp target/release/mock_data.exe dist/
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp target/release/mock_data.exe dist/mock_data.exe
           else
-            cp target/release/mock_data dist/
+            cp target/release/mock_data dist/mock_data
           fi
         shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: mock_data-${{ runner.os }}
+          name: mock_data-${{ matrix.os }}
           path: dist/
 
   release:
@@ -67,38 +67,34 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate Changelog
-        run: git cliff -o CHANGELOG.md
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
 
-      - name: Commit Changelog
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add CHANGELOG.md
-          git commit -m "chore: update changelog [skip ci]"
-          git push
+      - name: Install dependencies
+        run: npm install
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          body: Changes in this Release
-          draft: false
-          prerelease: false
+        run: npx semantic-release
 
-      - name: Upload Release Asset
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: mock_data-${{ matrix.os }}
+          path: dist/
+
+      - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.semantic_release.outputs.upload_url }}
           asset_path: dist/
-          asset_name: mock_data-${{ runner.os }}.tar.gz
+          asset_name: mock_data-${{ matrix.os }}.tar.gz
           asset_content_type: application/gzip
