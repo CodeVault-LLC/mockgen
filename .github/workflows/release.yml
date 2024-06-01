@@ -50,15 +50,15 @@ jobs:
         run: |
           mkdir -p dist
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            cp target/release/myapp.exe dist/
+            cp target/release/mock_data.exe dist/
           else
-            cp target/release/myapp dist/
+            cp target/release/mock_data dist/
           fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: myapp-${{ runner.os }}
+          name: mock_data-${{ runner.os }}
           path: dist/
 
   release:
@@ -99,5 +99,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/
-          asset_name: myapp-${{ runner.os }}.tar.gz
+          asset_name: mock_data-${{ runner.os }}.tar.gz
           asset_content_type: application/gzip
