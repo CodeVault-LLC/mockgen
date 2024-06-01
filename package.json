@@ -7,6 +7,10 @@
     "prepare": "husky",
     "semantic-release": "semantic-release"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codevault-llc/mockgen.git"
+  },
   "release": {
     "branches": [
       "main"
@@ -51,6 +55,17 @@
       "@semantic-release/github"
     ]
   },
+  "keywords": [
+    "mock",
+    "data",
+    "generator",
+    "template",
+    "example"
+  ],
+  "bugs": {
+    "url": "https://github.com/CodeVault-LLC/mockgen/issues"
+  },
+  "homepage": "https://github.com/CodeVault-LLC/mockgen#readme",
   "config": {
     "commitizen": {
       "path": "./node_modules/@ryansonshine/cz-conventional-changelog"
