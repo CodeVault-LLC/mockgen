@@ -2,6 +2,9 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+use crate::engine::{generate_component_data, ADDRESS};
+
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FieldType {
     type_: String,
@@ -66,6 +69,14 @@ impl MockDataGenerator {
                 let value: bool = rng.gen();
                 Ok(value.to_string())
             }
+
+            "Address" => {
+                let value = generate_component_data(&*ADDRESS);
+
+                let index = rng.gen_range(0..value.len());
+                Ok(value[index].clone())
+            }
+
             _ => Err(format!("Unsupported field type: {}", field_type.type_)),
         }
     }
