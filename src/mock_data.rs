@@ -1,6 +1,6 @@
 use async_graphql::{InputObject, SimpleObject};
 use rand::Rng;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use std::collections::HashMap;
 
 use crate::engine::{generate_component_data, ComponentOptions, FieldType, ADDRESS, BALANCE};
