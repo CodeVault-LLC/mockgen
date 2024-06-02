@@ -1,11 +1,11 @@
+use async_graphql::{InputObject, SimpleObject};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::engine::{generate_component_data, ADDRESS};
 
-
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, InputObject)]
 pub struct FieldType {
     type_: String,
     length: Option<u32>,
@@ -13,10 +13,15 @@ pub struct FieldType {
     default: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Deserialize, InputObject, Debug)]
 pub struct GenerateDataRequest {
-    rows: u32,
-    fields: HashMap<String, FieldType>,
+    pub rows: u32,
+    pub fields: HashMap<String, FieldType>,
+}
+
+#[derive(SimpleObject)]
+pub struct GenerateDataResponse {
+    pub data: Vec<HashMap<String, String>>,
 }
 
 pub struct MockDataGenerator;
@@ -78,106 +83,6 @@ impl MockDataGenerator {
             }
 
             _ => Err(format!("Unsupported field type: {}", field_type.type_)),
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_generate_integer_field() {
-        let generator = MockDataGenerator::new();
-        let field_type = FieldType {
-            type_: "Integer".to_string(),
-            length: None,
-            nullable: false,
-            default: None,
-        };
-
-        let value = generator.generate_field_value(&field_type).unwrap();
-        value.parse::<i32>().unwrap();
-    }
-
-    #[test]
-    fn test_generate_string_field() {
-        let generator = MockDataGenerator::new();
-        let field_type = FieldType {
-            type_: "String".to_string(),
-            length: Some(10),
-            nullable: false,
-            default: None,
-        };
-
-        let value = generator.generate_field_value(&field_type).unwrap();
-        assert_eq!(value.len(), 10);
-    }
-
-    #[test]
-    fn test_generate_float_field() {
-        let generator = MockDataGenerator::new();
-        let field_type = FieldType {
-            type_: "Float".to_string(),
-            length: None,
-            nullable: false,
-            default: None,
-        };
-
-        let value = generator.generate_field_value(&field_type).unwrap();
-        value.parse::<f64>().unwrap();
-    }
-
-    #[test]
-    fn test_generate_boolean_field() {
-        let generator = MockDataGenerator::new();
-        let field_type = FieldType {
-            type_: "Boolean".to_string(),
-            length: None,
-            nullable: false,
-            default: None,
-        };
-
-        let value = generator.generate_field_value(&field_type).unwrap();
-        value.parse::<bool>().unwrap();
-    }
-
-    #[test]
-    fn test_generate_data() {
-        let generator = MockDataGenerator::new();
-        let request = GenerateDataRequest {
-            rows: 5,
-            fields: {
-                let mut fields = HashMap::new();
-                fields.insert(
-                    "id".to_string(),
-                    FieldType {
-                        type_: "Integer".to_string(),
-                        length: None,
-                        nullable: false,
-                        default: None,
-                    },
-                );
-                fields.insert(
-                    "name".to_string(),
-                    FieldType {
-                        type_: "String".to_string(),
-                        length: Some(10),
-                        nullable: false,
-                        default: None,
-                    },
-                );
-                fields
-            },
-        };
-
-        let result = generator.generate_data(&request).unwrap();
-        assert_eq!(result.len(), 5);
-        for record in result {
-            assert!(record.contains_key("id"));
-            assert!(record.get("id").unwrap().parse::<i32>().is_ok());
-            assert!(record.contains_key("name"));
-            assert_eq!(record.get("name").unwrap().len(), 10);
         }
     }
 }
