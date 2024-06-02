@@ -1,5 +1,5 @@
-use super::Component;
-use std::process;
+use super::{Component, ComponentOptions};
+use std::{collections::HashMap, process};
 
 #[derive(Debug, serde::Deserialize)]
 struct Record {
@@ -20,14 +20,15 @@ impl Addresses {
     }
 
     fn fetch_data(&mut self) {
-        println!("Fetching data from stdin");
-        //Print the current folder
         let current_dir = std::env::current_dir().unwrap();
         println!("The current directory is {}", current_dir.display());
 
         // Read a file from data/addresses.csv
         let mut rdr = csv::Reader::from_path("src/data/addresses.csv").unwrap();
-        for result in rdr.deserialize() {
+        for (index, result) in rdr.deserialize().enumerate() {
+            if index >= 500 {
+                break;
+            }
             let record: Record = result.unwrap_or_else(|err| {
                 eprintln!("error deserializing record: {}", err);
                 process::exit(1);
@@ -38,7 +39,7 @@ impl Addresses {
 }
 
 impl Component for Addresses {
-    fn get_data(&self) -> Vec<String> {
+    fn get_data(&self, _options: &HashMap<String, ComponentOptions>) -> Vec<String> {
         self.data.clone()
     }
 }

@@ -3,15 +3,8 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use crate::engine::{generate_component_data, ADDRESS};
+use crate::engine::{generate_component_data, ComponentOptions, FieldType, ADDRESS, BALANCE};
 
-#[derive(Serialize, Deserialize, Debug, InputObject)]
-pub struct FieldType {
-    type_: String,
-    length: Option<u32>,
-    nullable: bool,
-    default: Option<String>,
-}
 
 #[derive(Deserialize, InputObject, Debug)]
 pub struct GenerateDataRequest {
@@ -74,12 +67,33 @@ impl MockDataGenerator {
                 let value: bool = rng.gen();
                 Ok(value.to_string())
             }
-
             "Address" => {
-                let value = generate_component_data(&*ADDRESS);
+                let mut options = HashMap::new();
+                options.insert("field_type".to_string(), ComponentOptions::FieldType(FieldType {
+                    type_: "String".to_string(),
+                    length: Some(1),
+                    nullable: false,
+                    default: None,
+                }));
+
+
+                let value = generate_component_data(&*ADDRESS, options);
 
                 let index = rng.gen_range(0..value.len());
                 Ok(value[index].clone())
+            }
+
+            "Balance" => {
+                let mut options = HashMap::new();
+                options.insert("currency_code".to_string(), ComponentOptions::FieldType(FieldType {
+                    type_: "String".to_string(),
+                    length: Some(3),
+                    nullable: false,
+                    default: Some("USD".to_string()),
+                }));
+
+                let value = generate_component_data(&*BALANCE, options);
+                Ok(value[0].clone())
             }
 
             _ => Err(format!("Unsupported field type: {}", field_type.type_)),
