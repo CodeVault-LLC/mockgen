@@ -1,10 +1,13 @@
 use actix_web::{http::header, test, App};
+use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
-use mock_data::{QueryRoot, MockDataSchema};
-use async_graphql::{Schema, EmptyMutation, EmptySubscription};
+use mock_data::{MockDataSchema, QueryRoot};
 use serde_json::json;
 
-async fn graphql_handler(schema: actix_web::web::Data<MockDataSchema>, req: GraphQLRequest) -> GraphQLResponse {
+async fn graphql_handler(
+    schema: actix_web::web::Data<MockDataSchema>,
+    req: GraphQLRequest,
+) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
 }
 
@@ -16,7 +19,8 @@ async fn test_generate_data_api() {
         App::new()
             .app_data(actix_web::web::Data::new(schema))
             .route("/graphql", actix_web::web::post().to(graphql_handler)),
-    ).await;
+    )
+    .await;
 
     let payload = json!({
         "query": "query {
@@ -45,20 +49,44 @@ async fn test_generate_data_api() {
     assert!(resp.status().is_success());
 
     let body: serde_json::Value = test::read_body_json(resp).await;
-    let data = body.get("data").unwrap().get("generateData").unwrap().get("result").unwrap();
+    let data = body
+        .get("data")
+        .unwrap()
+        .get("generateData")
+        .unwrap()
+        .get("result")
+        .unwrap();
     assert_eq!(data.as_array().unwrap().len(), 5);
 
     for record in data.as_array().unwrap() {
         let record = record.as_object().unwrap();
         assert!(record.contains_key("id"));
-        assert!(record.get("id").unwrap().as_str().unwrap().parse::<i32>().is_ok());
+        assert!(record
+            .get("id")
+            .unwrap()
+            .as_str()
+            .unwrap()
+            .parse::<i32>()
+            .is_ok());
         assert!(record.contains_key("name"));
         assert_eq!(record.get("name").unwrap().as_str().unwrap().len(), 10);
         assert!(record.contains_key("email"));
         assert_eq!(record.get("email").unwrap().as_str().unwrap().len(), 15);
         assert!(record.contains_key("price"));
-        assert!(record.get("price").unwrap().as_str().unwrap().parse::<f64>().is_ok());
+        assert!(record
+            .get("price")
+            .unwrap()
+            .as_str()
+            .unwrap()
+            .parse::<f64>()
+            .is_ok());
         assert!(record.contains_key("is_active"));
-        assert!(record.get("is_active").unwrap().as_str().unwrap().parse::<bool>().is_ok());
+        assert!(record
+            .get("is_active")
+            .unwrap()
+            .as_str()
+            .unwrap()
+            .parse::<bool>()
+            .is_ok());
     }
 }

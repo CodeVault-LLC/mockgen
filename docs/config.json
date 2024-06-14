@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/CodeVault-LLC/codevault/main/docs.config.schema.json",
+  "docs": [
+    {
+      "section": "Overview",
+      "title": "Introduction",
+      "files": [
+        {
+          "title": "Overview",
+          "description": "An overview of the Mockgen project.",
+          "filename": "overview/overview.md"
+        },
+        {
+          "title": "Installation",
+          "description": "How to install Mockgen.",
+          "filename": "overview/installation.md"
+        }
+      ]
+    }
+  ]
+}

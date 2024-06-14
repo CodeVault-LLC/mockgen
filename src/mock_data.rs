@@ -1,10 +1,9 @@
 use async_graphql::{InputObject, SimpleObject};
 use rand::Rng;
-use serde::{Deserialize};
+use serde::Deserialize;
 use std::collections::HashMap;
 
-use crate::engine::{generate_component_data, ComponentOptions, FieldType, ADDRESS, BALANCE};
-
+use crate::engine::{generate_component_data, FieldType, ADDRESS, BALANCE, PHONENUMBER};
 
 #[derive(Deserialize, InputObject, Debug)]
 pub struct GenerateDataRequest {
@@ -68,34 +67,43 @@ impl MockDataGenerator {
                 Ok(value.to_string())
             }
             "Address" => {
-                let mut options = HashMap::new();
-                options.insert("field_type".to_string(), ComponentOptions::FieldType(FieldType {
+                let options = FieldType {
                     type_: "String".to_string(),
                     length: Some(1),
                     nullable: false,
                     default: None,
-                }));
+                    properties: field_type.properties.clone(),
+                };
 
-
-                let value = generate_component_data(&*ADDRESS, options);
+                let value = generate_component_data(&*ADDRESS, &options);
 
                 let index = rng.gen_range(0..value.len());
                 Ok(value[index].clone())
             }
-
             "Balance" => {
-                let mut options = HashMap::new();
-                options.insert("currency_code".to_string(), ComponentOptions::FieldType(FieldType {
+                let options = FieldType {
                     type_: "String".to_string(),
-                    length: Some(3),
+                    length: Some(1),
                     nullable: false,
-                    default: Some("USD".to_string()),
-                }));
+                    default: None,
+                    properties: field_type.properties.clone(),
+                };
 
-                let value = generate_component_data(&*BALANCE, options);
+                let value = generate_component_data(&*BALANCE, &options);
                 Ok(value[0].clone())
             }
+            "PhoneNumber" => {
+                let options = FieldType {
+                    type_: "String".to_string(),
+                    length: Some(1),
+                    nullable: false,
+                    default: None,
+                    properties: field_type.properties.clone(),
+                };
 
+                let value = generate_component_data(&*PHONENUMBER, &options);
+                Ok(value[0].clone())
+            }
             _ => Err(format!("Unsupported field type: {}", field_type.type_)),
         }
     }

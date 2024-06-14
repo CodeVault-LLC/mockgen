@@ -46,6 +46,9 @@ jobs:
       - name: Run tests
         run: cargo test
 
+      - name: Security Audit
+        run: cargo audit
+
       - name: Package
         run: |
           mkdir -p dist
