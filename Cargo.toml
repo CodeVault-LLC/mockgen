@@ -7,6 +7,7 @@ description = "Mock Gen is a data generation tool used in making test data or fa
 license = "MIT"
 
 [dependencies]
+actix-cors = "0.7.0"
 actix-web = "4.6.0"
 async-graphql = "7.0.5"
 async-graphql-actix-web = "7.0.5"
